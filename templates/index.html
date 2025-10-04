@@ -10,9 +10,12 @@
         <h2>BMI Calculator</h2>
         <label for="height">Height (cm):</label>
         <input type="number" id="height" placeholder="Enter height" />
+        
         <label for="weight">Weight (kg):</label>
         <input type="number" id="weight" placeholder="Enter weight" />
+        
         <button onclick="calculateBMI()">Calculate BMI</button>
+
         <div class="result" id="result"></div>
         <div class="error" id="error"></div>
     </div>
@@ -28,12 +31,29 @@
         error.textContent = '';
 
         if (!height || !weight || height <= 0 || weight <= 0) {
-          error.textContent = 'Please enter valid height and weight.';
+          error.textContent = '⚠️ Please enter valid height and weight.';
           return;
         }
 
-        const bmi = (weight / ((height / 100) ** 2)).toFixed(2);
-        result.textContent = `Your BMI is ${bmi}`;
+        const bmi = (weight / ((height / 100) ** 2)).toFixed(1);
+        let message = `Your BMI is ${bmi}. `;
+        const minHealthyBMI = 18.5;
+        const maxHealthyBMI = 24.9;
+        const heightMeters = height / 100;
+        const minWeight = (minHealthyBMI * (heightMeters ** 2)).toFixed(1);
+        const maxWeight = (maxHealthyBMI * (heightMeters ** 2)).toFixed(1);
+
+        if (bmi < minHealthyBMI) {
+          const gain = (minWeight - weight).toFixed(1);
+          message += `You're underweight. You need to gain about ${gain} kg to reach a healthy BMI.`;
+        } else if (bmi > maxHealthyBMI) {
+          const lose = (weight - maxWeight).toFixed(1);
+          message += `You're overweight. You need to lose about ${lose} kg to reach a healthy BMI.`;
+        } else {
+          message += "✅ You're in the healthy BMI range!";
+        }
+
+        result.textContent = message;
       }
     </script>
 </body>
